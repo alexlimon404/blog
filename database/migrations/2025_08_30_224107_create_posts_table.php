@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('posts', function (Blueprint $table) {
@@ -18,6 +15,7 @@ return new class extends Migration
             $table->text('content');
             $table->text('excerpt')->nullable();
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->foreignId('author_id')->constrained()->onDelete('cascade');
             $table->boolean('is_published')->default(false);
             $table->timestamp('published_at')->nullable();
             $table->timestamps();

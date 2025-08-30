@@ -12,6 +12,7 @@ class Post extends Model
         'content',
         'excerpt',
         'category_id',
+        'author_id',
         'is_published',
         'published_at',
     ];
@@ -24,6 +25,16 @@ class Post extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function author()
+    {
+        return $this->belongsTo(Author::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
     }
 
     public function scopePublished($query)
