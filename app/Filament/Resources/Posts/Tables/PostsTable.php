@@ -5,14 +5,17 @@ namespace App\Filament\Resources\Posts\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\Action;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Category;
 use App\Models\Author;
+use App\Models\Post;
+use Filament\Notifications\Notification;
 
 class PostsTable
 {
@@ -35,7 +38,7 @@ class PostsTable
                     ->sortable()
                     ->searchable(),
                 
-                BooleanColumn::make('is_published')
+                IconColumn::make('is_published')
                     ->label('Published')
                     ->sortable(),
                 
@@ -71,6 +74,25 @@ class PostsTable
                 EditAction::make(),
             ])
             ->toolbarActions([
+                Action::make('generate_fake_posts')
+                    ->label('Generate Fake Posts')
+                    ->icon('heroicon-o-sparkles')
+                    ->color('success')
+                    ->action(function () {
+                        $count = 10;
+                        Post::factory()->count($count)->create();
+                        
+                        Notification::make()
+                            ->success()
+                            ->title('Success')
+                            ->body("Generated {$count} fake posts successfully!")
+                            ->send();
+                    })
+                    ->requiresConfirmation()
+                    ->modalHeading('Generate Fake Posts')
+                    ->modalDescription('This will create 10 fake posts using the factory. Are you sure?')
+                    ->modalSubmitActionLabel('Generate'),
+                    
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
