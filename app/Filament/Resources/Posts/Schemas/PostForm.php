@@ -11,7 +11,6 @@ use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use App\Models\Category;
 use App\Models\Author;
-use App\Models\Tag;
 
 class PostForm
 {
@@ -39,7 +38,7 @@ class PostForm
                         
                         Textarea::make('content')
                             ->required()
-                            ->rows(10)
+                            ->autosize()
                             ->hint('Main content of the post'),
                     ])
                     ->columns(1),

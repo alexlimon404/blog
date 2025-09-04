@@ -22,7 +22,7 @@ class AuthorForm
                         
                         TextInput::make('email')
                             ->email()
-                            ->required()
+                            ->nullable()
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
                         
