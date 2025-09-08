@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'ai_chat' => [
+        'uuid' => env('AI_CHAT_UUID'),
+        'key' => env('AI_CHAT_KEY'),
+        'url' => env('AI_CHAT_URL'),
+    ]
 ];

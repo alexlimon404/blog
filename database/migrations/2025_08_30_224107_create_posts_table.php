@@ -9,15 +9,19 @@ return new class extends Migration {
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            $table->uuid()->unique();
             $table->timestamps();
             $table->timestamp('published_at')->nullable();
             $table->string('title');
             $table->string('slug')->unique();
-            $table->text('content');
+            $table->text('content')->nullable();
             $table->text('excerpt')->nullable();
+            $table->foreignId('base_prompt_id')->nullable()->constrained()->onDelete('set null');
             $table->foreignId('category_id')->index()->nullable()->constrained()->onDelete('set null');
             $table->foreignId('author_id')->index()->nullable()->constrained()->onDelete('set null');
-            $table->boolean('is_published')->default(false);
+
+            $table->string('driver')->nullable();
+            $table->string('model')->nullable();
         });
     }
 

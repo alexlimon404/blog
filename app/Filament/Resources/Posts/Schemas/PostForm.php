@@ -2,15 +2,15 @@
 
 namespace App\Filament\Resources\Posts\Schemas;
 
+use App\Services\AiGenerator\AiGenerator;
+use App\Services\AiGenerator\AiGeneratorEnum;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
-use App\Models\Category;
-use App\Models\Author;
 
 class PostForm
 {
@@ -20,45 +20,48 @@ class PostForm
             ->components([
                 Section::make('Post Information')
                     ->schema([
+                        DateTimePicker::make('published_at')
+                            ->inlineLabel()
+                            ->label('Published At')
+                            ->default(null),
+
                         TextInput::make('title')
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
                             ->afterStateUpdated(fn (string $context, $state, callable $set) => $context === 'create' ? $set('slug', str($state)->slug()) : null),
-                        
+
                         TextInput::make('slug')
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
-                        
+
                         Textarea::make('excerpt')
-                            ->rows(3)
-                            ->maxLength(500)
-                            ->hint('Brief description of the post'),
-                        
-                        Textarea::make('content')
-                            ->required()
                             ->autosize()
-                            ->hint('Main content of the post'),
-                    ])
-                    ->columns(1),
-                
+                            ->maxLength(500),
+                    ])->columns(1),
+
                 Section::make('Relationships & Settings')
                     ->schema([
                         Select::make('category_id')
                             ->label('Category')
-                            ->required()
-                            ->options(Category::pluck('name', 'id'))
+                            ->relationship('category', 'name')
                             ->searchable()
                             ->preload(),
-                        
+
                         Select::make('author_id')
                             ->label('Author')
-                            ->required()
-                            ->options(Author::pluck('name', 'id'))
+                            ->relationship('author', 'name')
                             ->searchable()
                             ->preload(),
-                        
+
+                        Select::make('base_prompt_id')
+                            ->label('BasePrompt')
+                            ->required()
+                            ->relationship('basePrompt', 'name')
+                            ->searchable()
+                            ->preload(),
+
                         Select::make('tags')
                             ->label('Tags')
                             ->relationship('tags', 'name')
@@ -75,18 +78,20 @@ class PostForm
                                 \Filament\Forms\Components\ColorPicker::make('color')
                                     ->default('#6B7280'),
                             ]),
-                        
-                        Toggle::make('is_published')
-                            ->label('Published')
-                            ->default(false)
+                        Select::make('driver')
+                            ->options(AiGeneratorEnum::toSelectArray())
+                            ->default(AiGeneratorEnum::TEST->value)
                             ->live(),
-                        
-                        DateTimePicker::make('published_at')
-                            ->label('Published At')
-                            ->visible(fn ($get) => $get('is_published'))
-                            ->default(now()),
+
+                        Select::make('model')
+                            ->options(function (callable $get) {
+                                $driver = $get('driver');
+                                return $driver ? AiGenerator::driver($driver)->getModels() : '';
+                            }),
                     ])
-                    ->columns(2)
+                    ->columns(2),
+
+                RichEditor::make('content')->columnSpanFull(),
             ]);
     }
 }

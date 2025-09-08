@@ -2,21 +2,18 @@
 
 namespace App\Filament\Resources\Posts\Tables;
 
-use Database\Factories\PostFactory;
-use Filament\Actions\BulkActionGroup;
+use App\Actions\Post\GetToGenerateAction;
+use App\Actions\Post\SendToGenerateAction;
+use Filament\Actions\BulkAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\Action;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Category;
 use App\Models\Author;
-use Filament\Notifications\Notification;
 
 class PostsTable
 {
@@ -24,35 +21,45 @@ class PostsTable
     {
         return $table
             ->columns([
-                TextColumn::make('title')
-                    ->searchable()
-                    ->sortable()
-                    ->limit(50),
-
-                TextColumn::make('category.name')
-                    ->label('Category')
-                    ->sortable()
-                    ->searchable(),
-
-                TextColumn::make('author.name')
-                    ->label('Author')
-                    ->sortable()
-                    ->searchable(),
-
-                IconColumn::make('is_published')
-                    ->label('Published')
+                TextColumn::make('id')
                     ->sortable(),
 
-                TextColumn::make('published_at')
-                    ->label('Published')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(),
+                TextColumn::make('uuid')
+                    ->copyable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('published_at')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Published')
+                    ->dateTime()
+                    ->sortable(),
+
+                TextColumn::make('title')
+                    ->searchable()
+                    ->limit(50),
+
+                TextColumn::make('basePrompt.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Prompt')
+                    ->sortable(),
+
+                TextColumn::make('category.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Category')
+                    ->sortable(),
+
+                TextColumn::make('author.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Author')
+                    ->sortable(),
+
+                TextColumn::make('driver')->badge()->color('success'),
+                TextColumn::make('model')->badge()->color('success'),
             ])
             ->filters([
                 SelectFilter::make('category_id')
@@ -75,39 +82,21 @@ class PostsTable
                 EditAction::make(),
             ])
             ->toolbarActions([
-                Action::make('generate_fake_posts')
-                    ->label('Generate Fake Posts')
-                    ->icon('heroicon-o-sparkles')
+                BulkAction::make('send_to_generate')
+                    ->color('warning')
+                    ->action(function (array $data, $records) {
+                        foreach ($records as $record) {
+                            SendToGenerateAction::run($record, $data);
+                        }
+                    }),
+                BulkAction::make('get_from_generate')
                     ->color('success')
-                    ->schema([
-                        TextInput::make('count')
-                            ->label('Number of posts')
-                            ->numeric()
-                            ->required()
-                            ->default(1)
-                            ->minValue(1)
-                            ->maxValue(10)
-                    ])
-                    ->action(function (array $data) {
-                        $count = $data['count'];
-                        PostFactory::new()->count($count)->create([
-                            'category_id' => Category::query()->get()->random()->id,
-                            'author_id' => Author::query()->get()->random()->id,
-                        ]);
-
-                        Notification::make()
-                            ->success()
-                            ->title('Success')
-                            ->body("Generated {$count} fake posts successfully!")
-                            ->send();
-                    })
-                    ->requiresConfirmation()
-                    ->modalHeading('Generate Fake Posts')
-                    ->modalSubmitActionLabel('Generate'),
-
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                    ->action(function (array $data, $records) {
+                        foreach ($records as $record) {
+                            GetToGenerateAction::run($record, $data);
+                        }
+                    }),
+                DeleteBulkAction::make(),
             ]);
     }
 }
