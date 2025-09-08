@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Actions\BulkAction;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -27,6 +28,11 @@ class AdminPanelProvider extends PanelProvider
         Table::configureUsing(static function (Table $table): void {
             $table->defaultPaginationPageOption(10);
             $table->defaultSort('id', 'desc');
+            $table->deferColumnManager(false);
+        });
+
+        BulkAction::configureUsing(static function (BulkAction $action): void {
+            $action->badge();
         });
     }
 

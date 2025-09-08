@@ -87,6 +87,6 @@ class Post extends Model
 
     public function scopePublished(Builder $query): Builder
     {
-        return $query->where('published_at', '>=', now());
+        return $query->where('published_at', '<=', now());
     }
 }

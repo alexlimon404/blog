@@ -104,7 +104,7 @@ class PostsTable
                             RegenerateAction::run($record, $data);
                         }
                     }),
-                DeleteBulkAction::make(),
+                DeleteBulkAction::make()->label(''),
             ]);
     }
 }

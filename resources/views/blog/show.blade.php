@@ -9,8 +9,13 @@
                 <h1>{{ $post->title }}</h1>
 
                 <div class="text-muted mb-4">
-                    By <a href="{{ route('blog.author', $post->author->id) }}">{{ $post->author->name }}</a>
-                    in <a href="{{ route('blog.category', $post->category->slug) }}">{{ $post->category->name }}</a>
+                    @if($post->author_id)
+                        By <a href="{{ route('blog.author', $post->author->id) }}">{{ $post->author->name }}</a>
+                    @endif
+                    @if($post->category_id)
+                        {{ $post->author ? 'in' : '' }}
+                        <a href="{{ route('blog.category', $post->category->slug) }}">{{ $post->category->name }}</a>
+                    @endif
                     • {{ $post->published_at->format('M d, Y') }}
                 </div>
 
