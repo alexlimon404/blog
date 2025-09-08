@@ -8,5 +8,7 @@ interface Driver
 
     public function createText(array $params): array;
 
+    public function regenerateText(string $uuid, array $params): array;
+
     public function getModels(array $params = []): array;
 }

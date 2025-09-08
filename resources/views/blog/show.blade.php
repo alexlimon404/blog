@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="content">
-                    {!! nl2br(e($post->content)) !!}
+                    {!! $post->content !!}
                 </div>
             </article>
 

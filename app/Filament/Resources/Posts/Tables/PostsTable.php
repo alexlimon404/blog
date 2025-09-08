@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Posts\Tables;
 
 use App\Actions\Post\GetToGenerateAction;
+use App\Actions\Post\RegenerateAction;
 use App\Actions\Post\SendToGenerateAction;
 use Filament\Actions\BulkAction;
 use Filament\Actions\DeleteBulkAction;
@@ -94,6 +95,13 @@ class PostsTable
                     ->action(function (array $data, $records) {
                         foreach ($records as $record) {
                             GetToGenerateAction::run($record, $data);
+                        }
+                    }),
+                BulkAction::make('regenerate')
+                    ->color('warning')
+                    ->action(function (array $data, $records) {
+                        foreach ($records as $record) {
+                            RegenerateAction::run($record, $data);
                         }
                     }),
                 DeleteBulkAction::make(),

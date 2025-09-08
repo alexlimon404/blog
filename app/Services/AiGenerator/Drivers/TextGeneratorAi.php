@@ -36,6 +36,17 @@ class TextGeneratorAi implements Driver
         $response->throw();
     }
 
+    public function regenerateText(string $uuid, array $params): array
+    {
+        $response = $this->client()->put("prompt-requests/$uuid/regenerate", $params);
+
+        if ($response->status() === 200) {
+            return $response->json();
+        }
+
+        $response->throw();
+    }
+
     public function getModels(array $params = []): array
     {
         try {
