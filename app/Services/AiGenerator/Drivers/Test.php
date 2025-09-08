@@ -29,4 +29,11 @@ class Test implements Driver
             'test_model' => 'Test Model',
         ];
     }
+
+    public function regenerateText(string $uuid, array $params): array
+    {
+        return [
+            'uuid' => $params['uuid'],
+        ];
+    }
 }

@@ -5,9 +5,12 @@ namespace App\Filament\Resources\Posts\Tables;
 use App\Actions\Post\GetToGenerateAction;
 use App\Actions\Post\RegenerateAction;
 use App\Actions\Post\SendToGenerateAction;
+use App\Services\AiGenerator\AiGenerator;
+use App\Services\AiGenerator\AiGeneratorEnum;
 use Filament\Actions\BulkAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -102,6 +105,28 @@ class PostsTable
                     ->action(function (array $data, $records) {
                         foreach ($records as $record) {
                             RegenerateAction::run($record, $data);
+                        }
+                    }),
+                BulkAction::make('update_driver_and_model')
+                    ->label('Update Driver')
+                    ->color('info')
+                    ->schema([
+                        Select::make('driver')
+                            ->options(AiGeneratorEnum::toSelectArray())
+                            ->default(AiGeneratorEnum::TEST->value)
+                            ->live(),
+                        Select::make('model')
+                            ->options(function (callable $get) {
+                                $driver = $get('driver');
+                                return $driver ? AiGenerator::driver($driver)->getModels() : [];
+                            }),
+                    ])
+                    ->action(function (array $data, $records) {
+                        foreach ($records as $record) {
+                            $record->update([
+                                'driver' => $data['driver'],
+                                'model' => $data['model'],
+                            ]);
                         }
                     }),
                 DeleteBulkAction::make()->label(''),
