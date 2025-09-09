@@ -8,8 +8,10 @@ use App\Actions\Post\SendToGenerateAction;
 use App\Services\AiGenerator\AiGenerator;
 use App\Services\AiGenerator\AiGeneratorEnum;
 use Filament\Actions\BulkAction;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
@@ -83,7 +85,9 @@ class PostsTable
                     ->label('Drafts Only'),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkAction::make('send_to_generate')

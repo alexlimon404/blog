@@ -3,6 +3,9 @@
 namespace App\Providers\Filament;
 
 use Filament\Actions\BulkAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -14,6 +17,7 @@ use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Tables\Table;
 use Filament\Widgets\AccountWidget;
+use Illuminate\Support\HtmlString;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -34,6 +38,16 @@ class AdminPanelProvider extends PanelProvider
         BulkAction::configureUsing(static function (BulkAction $action): void {
             $action->badge();
         });
+
+        EditAction::configureUsing(static function (EditAction $action): void {
+            $action->label('E');
+        });
+        ViewAction::configureUsing(static function (ViewAction $action): void {
+            $action->label('V')->color('success');
+        });
+        DeleteAction::configureUsing(static function (DeleteAction $action): void {
+            $action->label('D');
+        });
     }
 
     public function panel(Panel $panel): Panel
@@ -46,6 +60,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->brandName(new HtmlString('<a href="' . config('app.url') . '" target="_blank">Blog</a>'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
