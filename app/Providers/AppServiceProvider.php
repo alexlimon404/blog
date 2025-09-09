@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Opcodes\LogViewer\Facades\LogViewer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,5 +16,9 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::defaultView('pagination::bootstrap-5');
         Paginator::defaultSimpleView('pagination::simple-bootstrap-5');
+
+        LogViewer::auth(static function ($request) {
+            return $request->user()->admin;
+        });
     }
 }
