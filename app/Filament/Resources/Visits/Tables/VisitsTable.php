@@ -17,6 +17,7 @@ class VisitsTable
     {
         return $table
             ->columns([
+                TextColumn::make('id'),
                 TextColumn::make('created_at')
                     ->label('Время посещения')
                     ->dateTime('d.m.Y H:i')

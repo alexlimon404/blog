@@ -13,6 +13,7 @@ class UsersTable
     {
         return $table
             ->columns([
+                TextColumn::make('id'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->toggleable(isToggledHiddenByDefault: true),

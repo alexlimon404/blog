@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\Authors\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Table;
@@ -16,10 +14,11 @@ class AuthorsTable
     {
         return $table
             ->columns([
+                TextColumn::make('id'),
                 ImageColumn::make('avatar')
                     ->circular()
                     ->defaultImageUrl(url('/images/placeholder-avatar.png'))
-                    ->size(40),
+                    ->imageSize(40),
                     
                 TextColumn::make('name')
                     ->searchable()
@@ -44,11 +43,6 @@ class AuthorsTable
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
             ]);
     }
 }
