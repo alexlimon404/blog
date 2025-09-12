@@ -72,8 +72,7 @@ class PostsTable
 
                 TextColumn::make('driver')->badge()->color('success'),
                 TextColumn::make('model')->badge()->color('success'),
-                IconColumn::make('isPublished')
-                    ->boolean()
+                IconColumn::make('isPublished')->boolean()
                     ->state(function (Post $record) {
                         return $record->isPublished();
                     }),
