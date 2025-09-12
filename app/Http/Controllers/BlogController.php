@@ -22,10 +22,16 @@ class BlogController extends Controller
 
     public function show(string $slug)
     {
-        $post = Post::published()
+        $query = Post::query()
             ->with(['author', 'category', 'tags'])
-            ->where('slug', $slug)
-            ->firstOrFail();
+            ->where('slug', $slug);
+
+        // Если пользователь не админ, показывать только опубликованные посты
+        if (! auth()->check() || ! auth()->user()->admin) {
+            $query->published();
+        }
+
+        $post = $query->firstOrFail();
 
         return view('blog.show', compact('post'));
     }

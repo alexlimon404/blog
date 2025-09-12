@@ -5,11 +5,14 @@ namespace App\Filament\Resources\Posts;
 use App\Filament\Resources\Posts\Pages\CreatePost;
 use App\Filament\Resources\Posts\Pages\EditPost;
 use App\Filament\Resources\Posts\Pages\ListPosts;
+use App\Filament\Resources\Posts\Pages\ViewPost;
 use App\Filament\Resources\Posts\Schemas\PostForm;
 use App\Filament\Resources\Posts\Tables\PostsTable;
 use App\Models\Post;
 use BackedEnum;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
@@ -36,10 +39,60 @@ class PostResource extends Resource
         return PostsTable::configure($table);
     }
 
-    public static function getRelations(): array
+    public static function infolist(Schema $schema): Schema
+    {
+        return $schema->schema(static::getInfoList($schema));
+    }
+
+    public static function getInfoList(Schema $schema): array
     {
         return [
-            //
+            Section::make('Post Information')->inlineLabel()
+                ->columns(1)
+                ->schema([
+                    TextEntry::make('id'),
+                    TextEntry::make('created_at')
+                        ->dateTime(),
+                    TextEntry::make('updated_at')
+                        ->dateTime(),
+                    TextEntry::make('published_at')
+                        ->color(function (Post $record) {
+                            return $record->isPublished() ? 'success' : 'danger';
+                        })
+                        ->dateTime(),
+                    TextEntry::make('uuid')
+                        ->copyable(),
+                    TextEntry::make('title'),
+                    TextEntry::make('slug')
+                        ->color('warning')
+                        ->url(fn (Post $record): string => route('blog.post', $record->slug))
+                        ->openUrlInNewTab(),
+
+                    TextEntry::make('excerpt'),
+
+                    TextEntry::make('tags.name')
+                        ->label('Tags')
+                        ->badge(),
+                ]),
+            Section::make('System')->inlineLabel()
+                ->schema([
+                    TextEntry::make('category.name')
+                        ->label('Category'),
+                    TextEntry::make('author.name')
+                        ->label('Author'),
+                    TextEntry::make('basePrompt.name')
+                        ->label('Prompt'),
+                    TextEntry::make('driver')
+                        ->badge(),
+                    TextEntry::make('model')
+                        ->badge(),
+                ]),
+            Section::make('Content')->columnSpanFull()
+                ->schema([
+                    TextEntry::make('content')
+                        ->markdown()
+                        ->columnSpanFull(),
+                ]),
         ];
     }
 
@@ -49,6 +102,7 @@ class PostResource extends Resource
             'index' => ListPosts::route('/'),
             'create' => CreatePost::route('/create'),
             'edit' => EditPost::route('/{record}/edit'),
+            'view' => ViewPost::route('/{record}'),
         ];
     }
 }
