@@ -11,6 +11,8 @@ use Illuminate\Support\Str;
 
 /**
  * @property int $id
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
  * @property string $uuid
  * @property string $title
  * @property string $slug
@@ -22,8 +24,6 @@ use Illuminate\Support\Str;
  * @property \Carbon\Carbon|null $published_at
  * @property string|null $driver
  * @property string|null $model
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
  *
  * @property-read Category|null $category
  * @property-read Author|null $author
@@ -88,5 +88,10 @@ class Post extends Model
     public function scopePublished(Builder $query): Builder
     {
         return $query->where('published_at', '<=', now());
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->published_at && $this->published_at <= now();
     }
 }

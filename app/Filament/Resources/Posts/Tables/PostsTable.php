@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Posts\Tables;
 use App\Actions\Post\GetToGenerateAction;
 use App\Actions\Post\RegenerateAction;
 use App\Actions\Post\SendToGenerateAction;
+use App\Models\Post;
 use App\Services\AiGenerator\AiGenerator;
 use App\Services\AiGenerator\AiGeneratorEnum;
 use Filament\Actions\BulkAction;
@@ -13,6 +14,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -45,6 +47,10 @@ class PostsTable
                     ->dateTime()
                     ->sortable(),
 
+                TextColumn::make('slug')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable(),
+
                 TextColumn::make('title')
                     ->searchable()
                     ->limit(50),
@@ -66,6 +72,11 @@ class PostsTable
 
                 TextColumn::make('driver')->badge()->color('success'),
                 TextColumn::make('model')->badge()->color('success'),
+                IconColumn::make('isPublished')
+                    ->boolean()
+                    ->state(function (Post $record) {
+                        return $record->isPublished();
+                    }),
             ])
             ->filters([
                 SelectFilter::make('category_id')

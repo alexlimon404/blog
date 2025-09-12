@@ -38,6 +38,11 @@ class Visit extends Model
         return static::whereDate('created_at', today())->count();
     }
 
+    public static function getTodayUniqueVisits(): int
+    {
+        return static::distinct('ip_address')->whereDate('created_at', today())->count('ip_address');
+    }
+
     public static function getUniqueVisitors(): int
     {
         return static::distinct('ip_address')->count('ip_address');
