@@ -1,5 +1,18 @@
 <div class="card mb-4">
     <div class="card-header">
+        <h5>🔔 Push Notifications</h5>
+    </div>
+    <div class="card-body">
+        <p class="card-text">Get notified about new posts!</p>
+        <button id="subscribe-btn" class="btn btn-primary btn-sm w-100">
+            Subscribe to notifications
+        </button>
+        <div id="notification-status" class="mt-2 small text-muted"></div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
         <h5>Categories</h5>
     </div>
     <div class="card-body">

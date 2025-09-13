@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Blog')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -112,6 +113,142 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+    import {initializeApp} from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js';
+    import {getMessaging} from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-messaging.js';
+
+    const firebaseConfig = {
+        apiKey: "{{ env('FIREBASE_API_KEY') }}",
+        authDomain: "{{ env('FIREBASE_AUTH_DOMAIN') }}",
+        projectId: "{{ env('FIREBASE_PROJECT_ID') }}",
+        storageBucket: "{{ env('FIREBASE_STORAGE_BUCKET') }}",
+        messagingSenderId: "{{ env('FIREBASE_MESSAGING_SENDER_ID') }}",
+        appId: "{{ env('FIREBASE_APP_ID') }}"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    window.messaging = getMessaging(app);
+
+    // Push notifications functionality
+    window.pushNotifications = {
+        async init() {
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                this.updateStatus('Push notifications not supported');
+                return;
+            }
+
+            // Register service worker
+            try {
+                const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+                console.log('Service Worker registered:', registration);
+            } catch (error) {
+                console.error('Service Worker registration failed:', error);
+                this.updateStatus('Failed to register service worker');
+                return;
+            }
+
+            this.setupUI();
+        },
+
+        setupUI() {
+            const subscribeBtn = document.getElementById('subscribe-btn');
+            const statusDiv = document.getElementById('notification-status');
+
+            if (!subscribeBtn || !statusDiv) return;
+
+            // Check current subscription status
+            this.checkSubscriptionStatus();
+
+            subscribeBtn.addEventListener('click', () => {
+                this.toggleSubscription();
+            });
+        },
+
+        async checkSubscriptionStatus() {
+            const permission = Notification.permission;
+            const subscribeBtn = document.getElementById('subscribe-btn');
+
+            if (permission === 'granted') {
+                try {
+                    const token = await getToken(window.messaging, {
+                        vapidKey: "{{ env('FIREBASE_VAPID_KEY') }}"
+                    });
+
+                    if (token) {
+                        subscribeBtn.textContent = 'Subscribed ✓';
+                        subscribeBtn.className = 'btn btn-success btn-sm w-100';
+                        this.updateStatus('You are subscribed to notifications');
+                    }
+                } catch (error) {
+                    console.error('Error getting token:', error);
+                }
+            } else if (permission === 'denied') {
+                subscribeBtn.textContent = 'Notifications blocked';
+                subscribeBtn.className = 'btn btn-danger btn-sm w-100';
+                subscribeBtn.disabled = true;
+                this.updateStatus('Notifications are blocked. Please enable them in your browser settings.');
+            }
+        },
+
+        async toggleSubscription() {
+            const {getToken} = await import('https://www.gstatic.com/firebasejs/10.13.0/firebase-messaging.js');
+
+            try {
+                const permission = await Notification.requestPermission();
+
+                if (permission === 'granted') {
+                    const token = await getToken(window.messaging, {
+                        vapidKey: "{{ env('FIREBASE_VAPID_KEY') }}"
+                    });
+
+                    if (token) {
+                        await this.saveSubscription(token);
+                        this.updateStatus('Successfully subscribed to notifications!');
+
+                        const subscribeBtn = document.getElementById('subscribe-btn');
+                        subscribeBtn.textContent = 'Subscribed ✓';
+                        subscribeBtn.className = 'btn btn-success btn-sm w-100';
+                    }
+                } else {
+                    this.updateStatus('Notification permission denied');
+                }
+            } catch (error) {
+                console.error('Error subscribing to notifications:', error);
+                this.updateStatus('Failed to subscribe to notifications');
+            }
+        },
+
+        async saveSubscription(token) {
+            try {
+                const response = await fetch('/api/push-subscriptions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    },
+                    body: JSON.stringify({
+                        token: token,
+                        user_agent: navigator.userAgent
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to save subscription');
+                }
+            } catch (error) {
+                console.error('Error saving subscription:', error);
+                throw error;
+            }
+        },
+
+        updateStatus(message) {
+            const statusDiv = document.getElementById('notification-status');
+            if (statusDiv) {
+                statusDiv.textContent = message;
+            }
+        }
+    };
+</script>
 <script>
     // Theme switching functionality
     (function () {
@@ -162,6 +299,13 @@
             }
         });
     })();
+
+    // Initialize push notifications when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.pushNotifications) {
+            window.pushNotifications.init();
+        }
+    });
 </script>
 </body>
 </html>
