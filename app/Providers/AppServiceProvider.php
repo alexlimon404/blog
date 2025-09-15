@@ -21,8 +21,8 @@ class AppServiceProvider extends ServiceProvider
             return $request->user()->admin;
         });
 
-//        if (app()->isProduction()) {
-            //\Illuminate\Support\Facades\URL::forceScheme('https');
-//        }
+        // if (app()->isProduction()) {
+        // \Illuminate\Support\Facades\URL::forceScheme('https');
+        // }
     }
 }
