@@ -39,5 +39,10 @@ return [
         'uuid' => env('AI_CHAT_UUID'),
         'key' => env('AI_CHAT_KEY'),
         'url' => env('AI_CHAT_URL'),
+    ],
+
+    'firebase' => [
+        'project_id' => env('FIREBASE_PROJECT_ID'),
+        'credentials_path' => env('FIREBASE_CREDENTIALS_PATH', 'firebase-service-account.json'),
     ]
 ];

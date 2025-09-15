@@ -20,5 +20,9 @@ class AppServiceProvider extends ServiceProvider
         LogViewer::auth(static function ($request) {
             return $request->user()->admin;
         });
+
+//        if (app()->isProduction()) {
+            //\Illuminate\Support\Facades\URL::forceScheme('https');
+//        }
     }
 }

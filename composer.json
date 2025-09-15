@@ -11,7 +11,8 @@
         "laravel/framework": "^12.0",
         "laravel/telescope": "^5.11",
         "laravel/tinker": "^2.10.1",
-        "opcodesio/log-viewer": "^3.19"
+        "opcodesio/log-viewer": "^3.19",
+        "ext-openssl": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
