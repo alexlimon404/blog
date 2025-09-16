@@ -2,7 +2,11 @@
 
 namespace App\Filament\Resources\Posts\Pages;
 
+use App\Actions\Post\GetToGenerateAction;
+use App\Actions\Post\RegenerateAction;
+use App\Actions\Post\SendToGenerateAction;
 use App\Filament\Resources\Posts\PostResource;
+use App\Filament\Traits\HasPreviewNext;
 use Filament\Actions\EditAction;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
@@ -12,9 +16,74 @@ class ViewPost extends ViewRecord
 {
     protected static string $resource = PostResource::class;
 
+    use HasPreviewNext;
+
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('send_to_generate')
+                ->label('Send to Generate')
+                ->icon('heroicon-o-paper-airplane')
+                ->color('warning')
+                ->action(function () {
+                    try {
+                        SendToGenerateAction::run($this->record);
+                        Notification::make()
+                            ->title('Post sent to AI generator')
+                            ->success()
+                            ->send();
+                    } catch (\Exception $e) {
+                        Notification::make()
+                            ->title('Failed to send to generator')
+                            ->body($e->getMessage())
+                            ->danger()
+                            ->send();
+                    }
+                })
+                ->requiresConfirmation()
+                ->modalHeading('Send to AI Generator')
+                ->modalDescription('This will send the post to AI generator for content creation.'),
+            Action::make('get_from_generate')
+                ->label('Get from Generate')
+                ->icon('heroicon-o-arrow-down-tray')
+                ->color('success')
+                ->action(function () {
+                    try {
+                        GetToGenerateAction::run($this->record);
+                        Notification::make()
+                            ->title('Content retrieved from generator')
+                            ->success()
+                            ->send();
+                    } catch (\Exception $e) {
+                        Notification::make()
+                            ->title('Failed to get from generator')
+                            ->body($e->getMessage())
+                            ->danger()
+                            ->send();
+                    }
+                }),
+            Action::make('regenerate')
+                ->label('Regenerate')
+                ->icon('heroicon-o-arrow-path')
+                ->color('danger')
+                ->action(function () {
+                    try {
+                        RegenerateAction::run($this->record);
+                        Notification::make()
+                            ->title('Post regeneration started')
+                            ->success()
+                            ->send();
+                    } catch (\Exception $e) {
+                        Notification::make()
+                            ->title('Failed to regenerate')
+                            ->body($e->getMessage())
+                            ->danger()
+                            ->send();
+                    }
+                })
+                ->requiresConfirmation()
+                ->modalHeading('Regenerate Content')
+                ->modalDescription('This will regenerate the post content using AI.'),
             Action::make('publish')
                 ->label($this->record->isPublished() ? 'Unpublish' : 'Publish')
                 ->icon($this->record->isPublished() ? 'heroicon-o-eye-slash' : 'heroicon-o-eye')
@@ -35,6 +104,7 @@ class ViewPost extends ViewRecord
                     }
                 }),
             EditAction::make(),
+            ...self::getPreviewNextActions(),
         ];
     }
 }

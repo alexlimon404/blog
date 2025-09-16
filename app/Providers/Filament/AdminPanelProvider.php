@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -48,6 +49,12 @@ class AdminPanelProvider extends PanelProvider
         });
         DeleteAction::configureUsing(static function (DeleteAction $action): void {
             $action->label('D');
+        });
+        Action::configureUsing(static function (Action $action): void {
+            $livewire = app('livewire')->current();
+            if ($livewire instanceof \Filament\Resources\Pages\ViewRecord) {
+                $action->badge();
+            }
         });
     }
 
