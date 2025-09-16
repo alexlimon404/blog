@@ -262,9 +262,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         if (window.pushNotifications) {
-            setTimeout(() => {
-                window.pushNotifications.init();
-            }, 3000);
+            window.pushNotifications.init();
         }
     });
 </script>
