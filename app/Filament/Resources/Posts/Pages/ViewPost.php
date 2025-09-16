@@ -7,6 +7,7 @@ use App\Actions\Post\RegenerateAction;
 use App\Actions\Post\SendToGenerateAction;
 use App\Filament\Resources\Posts\PostResource;
 use App\Filament\Traits\HasPreviewNext;
+use App\Models\Post;
 use Filament\Actions\EditAction;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
@@ -22,6 +23,9 @@ class ViewPost extends ViewRecord
     {
         return [
             Action::make('send_to_generate')
+                ->visible(function (Post $post) {
+                    return !$post->content;
+                })
                 ->label('Send to Generate')
                 ->icon('heroicon-o-paper-airplane')
                 ->color('warning')
