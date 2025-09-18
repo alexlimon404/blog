@@ -1,2 +1,12 @@
 User-agent: *
-Disallow:
+Disallow: /admin/
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /.env
+Disallow: /node_modules/
+
+# Allow crawling of all other content
+Allow: /
+
+# Sitemap location
+Sitemap: http://blog/sitemap.xml
