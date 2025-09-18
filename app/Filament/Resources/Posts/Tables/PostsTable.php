@@ -79,6 +79,12 @@ class PostsTable
                 TextColumn::make('visits_count')
                     ->counts('visits')
                     ->sortable()
+                    ->badge()
+                    ->color('success'),
+
+                TextColumn::make('today_visits_count')
+                    ->sortable()
+                    ->badge()
                     ->color('info'),
 
             ])

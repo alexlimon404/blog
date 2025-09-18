@@ -36,7 +36,13 @@ class PostResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return PostsTable::configure($table);
+        return PostsTable::configure($table)
+            ->modifyQueryUsing(fn ($query) => $query
+                ->withCount([
+                    'visits',
+                    'visits as today_visits_count' => fn ($query) => $query->whereDate('created_at', today())
+                ])
+            );
     }
 
     public static function infolist(Schema $schema): Schema
@@ -86,6 +92,16 @@ class PostResource extends Resource
                         ->badge(),
                     TextEntry::make('model')
                         ->badge(),
+                    TextEntry::make('today_visits_count')
+                        ->label('Today Visits')
+                        ->state(fn (Post $record): int => $record->visits()->whereDate('created_at', today())->count())
+                        ->badge()
+                        ->color('info'),
+                    TextEntry::make('visits_count')
+                        ->label('Total Visits')
+                        ->state(fn (Post $record): int => $record->visits()->count())
+                        ->badge()
+                        ->color('success'),
                 ]),
             Section::make('Content')->columnSpanFull()
                 ->schema([
@@ -93,6 +109,13 @@ class PostResource extends Resource
                         ->markdown()
                         ->columnSpanFull(),
                 ]),
+        ];
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            RelationManagers\VisitsRelationManager::class,
         ];
     }
 
