@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Visit extends Model
 {
@@ -82,5 +83,10 @@ class Visit extends Model
     {
         return $query->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year);
+    }
+
+    public function post(): BelongsTo
+    {
+        return $this->belongsTo(Post::class);
     }
 }

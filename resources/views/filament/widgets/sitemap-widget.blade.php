@@ -1,9 +1,5 @@
 <x-filament-widgets::widget>
     <x-filament::section>
-        <x-slot name="heading">
-            Sitemap Management
-        </x-slot>
-
         <div class="flex gap-2">
             <x-filament::button
                 wire:click="generateSitemap"

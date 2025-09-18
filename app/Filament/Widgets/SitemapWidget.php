@@ -11,7 +11,7 @@ class SitemapWidget extends Widget
 {
     protected string $view = 'filament.widgets.sitemap-widget';
 
-    public function generateSitemap()
+    public function generateSitemap(): void
     {
         try {
             $action = new GenerateSitemapAction();

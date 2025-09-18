@@ -17,37 +17,41 @@ class VisitsTable
     {
         return $table
             ->columns([
-                TextColumn::make('id'),
-                TextColumn::make('created_at')
-                    ->label('Время посещения')
-                    ->dateTime('d.m.Y H:i')
+                TextColumn::make('id')
                     ->sortable(),
+                TextColumn::make('created_at')
+                    ->dateTime('d.m.Y H:i')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('url')
-                    ->label('URL')
                     ->searchable()
-                    ->sortable()
-                    ->limit(50),
+                    ->limit(30),
+
+                TextColumn::make('post.title')
+                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->limit(30)
+                    ->color('warning'),
 
                 TextColumn::make('page_title')
                     ->label('Заголовок страницы')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('ip_address')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->label('IP адрес')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
 
                 TextColumn::make('referrer')
-                    ->label('Источник')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->limit(30)
                     ->placeholder('Прямой переход'),
 
                 TextColumn::make('user_agent')
-                    ->label('User Agent')
-                    ->limit(40)
-                    ->toggleable(),
+                    ->limit(60)
+                    ->searchable(isIndividual: true)
+                    ->toggleable(isToggledHiddenByDefault: false),
             ])
             ->filters([
                 Filter::make('created_at')

@@ -44,7 +44,6 @@ class PostsTable
 
                 TextColumn::make('published_at')
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->label('Published')
                     ->dateTime()
                     ->sortable(),
 
@@ -58,25 +57,30 @@ class PostsTable
 
                 TextColumn::make('basePrompt.name')
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->label('Prompt')
                     ->sortable(),
 
                 TextColumn::make('category.name')
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->label('Category')
                     ->sortable(),
 
                 TextColumn::make('author.name')
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->label('Author')
                     ->sortable(),
-
-                TextColumn::make('driver')->badge()->color('success'),
-                TextColumn::make('model')->badge()->color('success'),
+                TextColumn::make('driver')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->badge()->color('success'),
+                TextColumn::make('model')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->badge()->color('success'),
                 IconColumn::make('isPublished')->boolean()
                     ->state(function (Post $record) {
                         return $record->isPublished();
                     }),
+                TextColumn::make('visits_count')
+                    ->counts('visits')
+                    ->sortable()
+                    ->color('info'),
+
             ])
             ->filters([
                 SelectFilter::make('category_id')
