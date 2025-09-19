@@ -76,17 +76,13 @@ class PostsTable
                     ->state(function (Post $record) {
                         return $record->isPublished();
                     }),
+                TextColumn::make('today_visits_count')
+                    ->sortable()
+                    ->color('info'),
                 TextColumn::make('visits_count')
                     ->counts('visits')
                     ->sortable()
-                    ->badge()
                     ->color('success'),
-
-                TextColumn::make('today_visits_count')
-                    ->sortable()
-                    ->badge()
-                    ->color('info'),
-
             ])
             ->filters([
                 SelectFilter::make('category_id')

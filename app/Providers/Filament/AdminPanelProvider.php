@@ -35,6 +35,7 @@ class AdminPanelProvider extends PanelProvider
             $table->defaultPaginationPageOption(10);
             $table->defaultSort('id', 'desc');
             $table->deferColumnManager(false);
+            $table->deferFilters(false);
         });
 
         BulkAction::configureUsing(static function (BulkAction $action): void {

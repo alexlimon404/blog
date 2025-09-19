@@ -16,7 +16,7 @@
                         {{ $post->author ? 'in' : '' }}
                         <a href="{{ route('blog.category', $post->category->slug) }}">{{ $post->category->name }}</a>
                     @endif
-                    • {{ $post->published_at->format('M d, Y') }}
+                    • {{ $post->published_at ? $post->published_at->format('M d, Y') : 'not_published' }}
                 </div>
 
                 <div class="mb-3">
