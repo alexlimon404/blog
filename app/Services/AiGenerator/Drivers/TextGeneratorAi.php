@@ -19,7 +19,7 @@ class TextGeneratorAi implements Driver
         $response = $this->client()->get("prompt-requests/{$params['uuid']}");
 
         if ($response->status() === 200) {
-            return $response->json();
+            return $response->json()['data'];
         }
 
         $response->throw();
@@ -30,7 +30,7 @@ class TextGeneratorAi implements Driver
         $response = $this->client()->post("prompt-requests", $params);
 
         if ($response->status() === 201) {
-            return $response->json();
+            return $response->json()['data'];
         }
 
         $response->throw();
@@ -41,7 +41,7 @@ class TextGeneratorAi implements Driver
         $response = $this->client()->put("prompt-requests/$uuid/regenerate", $params);
 
         if ($response->status() === 200) {
-            return $response->json();
+            return $response->json()['data'];
         }
 
         $response->throw();
