@@ -91,6 +91,12 @@ class PostResource extends Resource
                         ->color('warning')
                         ->url(fn (Post $record): string => BasePromptResource::getUrl('edit', [$record->base_prompt_id]))
                         ->label('Prompt'),
+                    TextEntry::make('status')
+                        ->badge()
+                        ->color(fn (string $state): string => Post::getStatuses()->firstWhere('id', $state)['color'] ?? 'gray')
+                        ->formatStateUsing(fn (string $state): string => Post::getStatuses()->firstWhere('id', $state)['name'] ?? $state),
+                    TextEntry::make('status_at')
+                        ->dateTime(),
                     TextEntry::make('driver')
                         ->badge(),
                     TextEntry::make('model')

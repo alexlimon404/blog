@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\HasStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 /**
@@ -33,7 +35,7 @@ use Illuminate\Support\Str;
  */
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, HasStatus;
 
     protected $fillable = [
         'uuid',
@@ -42,11 +44,19 @@ class Post extends Model
         'base_prompt_id', 'category_id', 'author_id',
         'published_at',
         'driver', 'model',
+        'status', 'status_at',
     ];
 
     protected $casts = [
         'published_at' => 'datetime',
+        'status_at' => 'datetime',
     ];
+
+    const STATUS_CREATED = 'created';
+    const STATUS_COMPLETED = 'completed';
+    const STATUS_GENERATED = 'generated';
+    const STATUS_REGENERATED = 'regenerated';
+    const STATUS_ERROR = 'error';
 
     protected static function boot(): void
     {
@@ -64,6 +74,17 @@ class Post extends Model
                 $post->slug = Str::slug($post->title);
             }
         });
+    }
+
+    public static function getStatuses(): Collection
+    {
+        return new Collection([
+            ['id' => static::STATUS_COMPLETED, 'name' => __('Завершено'), 'color' => 'success'],
+            ['id' => static::STATUS_CREATED, 'name' => __('Создано'), 'color' => 'grey'],
+            ['id' => static::STATUS_GENERATED, 'name' => __('Генерируется'), 'color' => 'warning'],
+            ['id' => static::STATUS_REGENERATED, 'name' => __('Регенерируется'), 'color' => 'grey'],
+            ['id' => static::STATUS_ERROR, 'name' => __('Ошибка'), 'color' => 'danger'],
+        ]);
     }
 
     public function category(): BelongsTo

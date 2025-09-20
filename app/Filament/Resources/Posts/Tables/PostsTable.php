@@ -76,6 +76,14 @@ class PostsTable
                     ->state(function (Post $record) {
                         return $record->isPublished();
                     }),
+                TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (string $state): string => Post::getStatuses()->firstWhere('id', $state)['color'] ?? 'gray')
+                    ->formatStateUsing(fn (string $state): string => Post::getStatuses()->firstWhere('id', $state)['name'] ?? $state),
+
+                TextColumn::make('status_at')
+                    ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('today_visits_count')
                     ->label('Today visits')
                     ->toggleable(isToggledHiddenByDefault: false)

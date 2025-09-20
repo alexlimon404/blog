@@ -39,6 +39,7 @@ return [
         'uuid' => env('AI_CHAT_UUID'),
         'key' => env('AI_CHAT_KEY'),
         'url' => env('AI_CHAT_URL'),
+        'auth_key' => env('AI_CHAT_AUTH'),
     ],
 
     'firebase' => [

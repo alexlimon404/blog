@@ -22,6 +22,9 @@ return new class extends Migration {
 
             $table->string('driver')->nullable();
             $table->string('model')->nullable();
+
+            $table->string('status', 20)->default(\App\Models\Post::STATUS_CREATED);
+            $table->timestamp('status_at')->nullable();
         });
     }
 
