@@ -14,10 +14,12 @@ class SendToGenerateAction extends Action
 
     public function handle(): void
     {
-        AiGenerator::driver($this->post->driver)->createText([
+        $data = AiGenerator::driver($this->post->driver)->createText([
             'uuid' => $this->post->uuid,
             'model_name' => $this->post->model,
             'text_request' => "{$this->post->basePrompt?->prompt} {$this->post->title}",
         ]);
+
+        $data['status'] === Post::STATUS_GENERATE && $this->post->updateStatus($data['status']);
     }
 }

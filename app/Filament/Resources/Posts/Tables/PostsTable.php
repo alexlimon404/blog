@@ -106,6 +106,10 @@ class PostsTable
                     ->label('Author')
                     ->options(Author::pluck('name', 'id')),
 
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->options(Post::getStatuses()->pluck('name', 'id')),
+
                 Filter::make('published')
                     ->query(fn (Builder $query): Builder => $query->whereNotNull('published_at')->where('published_at', '<=', now()))
                     ->label('Published Only'),
