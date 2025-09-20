@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Posts;
 
+use App\Filament\Resources\BasePrompts\BasePromptResource;
 use App\Filament\Resources\Posts\Pages\CreatePost;
 use App\Filament\Resources\Posts\Pages\EditPost;
 use App\Filament\Resources\Posts\Pages\ListPosts;
@@ -87,6 +88,8 @@ class PostResource extends Resource
                     TextEntry::make('author.name')
                         ->label('Author'),
                     TextEntry::make('basePrompt.name')
+                        ->color('warning')
+                        ->url(fn (Post $record): string => BasePromptResource::getUrl('edit', [$record->base_prompt_id]))
                         ->label('Prompt'),
                     TextEntry::make('driver')
                         ->badge(),

@@ -32,7 +32,8 @@ class AdminPanelProvider extends PanelProvider
     public function boot(): void
     {
         Table::configureUsing(static function (Table $table): void {
-            $table->defaultPaginationPageOption(10);
+            $table->defaultPaginationPageOption(15);
+            $table->paginationPageOptions([10, 15, 25, 50, 'all']);
             $table->defaultSort('id', 'desc');
             $table->deferColumnManager(false);
             $table->deferFilters(false);

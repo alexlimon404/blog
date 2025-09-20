@@ -77,9 +77,13 @@ class PostsTable
                         return $record->isPublished();
                     }),
                 TextColumn::make('today_visits_count')
+                    ->label('Today visits')
+                    ->toggleable(isToggledHiddenByDefault: false)
                     ->sortable()
                     ->color('info'),
                 TextColumn::make('visits_count')
+                    ->label('Visits')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->counts('visits')
                     ->sortable()
                     ->color('success'),
@@ -94,18 +98,15 @@ class PostsTable
                     ->options(Author::pluck('name', 'id')),
 
                 Filter::make('published')
-                    ->query(fn (Builder $query): Builder => $query->where('is_published', true))
+                    ->query(fn (Builder $query): Builder => $query->whereNotNull('published_at')->where('published_at', '<=', now()))
                     ->label('Published Only'),
-
-                Filter::make('draft')
-                    ->query(fn (Builder $query): Builder => $query->where('is_published', false))
-                    ->label('Drafts Only'),
             ])
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
                 Action::make('visit')
+                    ->label('')
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->url(fn (Post $record): string => route('blog.post', $record->slug))
                     ->openUrlInNewTab(),
