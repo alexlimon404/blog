@@ -14,6 +14,10 @@ class SendToGenerateAction extends Action
 
     public function handle(): void
     {
+        if ($this->post->status != Post::STATUS_CREATED) {
+            return;
+        }
+
         $data = AiGenerator::driver($this->post->driver)->createText([
             'uuid' => $this->post->uuid,
             'model_name' => $this->post->model,

@@ -24,7 +24,7 @@ class ViewPost extends ViewRecord
         return [
             Action::make('send_to_generate')
                 ->visible(function (Post $post) {
-                    return !$post->content;
+                    return $post->status === Post::STATUS_CREATED;
                 })
                 ->label('Send to Generate')
                 ->icon('heroicon-o-paper-airplane')
