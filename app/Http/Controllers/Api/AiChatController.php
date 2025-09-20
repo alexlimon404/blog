@@ -18,8 +18,8 @@ class AiChatController extends Controller
             'content' => 'required|string',
             'status' => ['required', 'string', Rule::in([
                 Post::STATUS_COMPLETED,
-                Post::STATUS_GENERATED,
-                Post::STATUS_REGENERATED,
+                Post::STATUS_GENERATE,
+                Post::STATUS_REGENERATE,
                 Post::STATUS_ERROR
             ])],
         ]);

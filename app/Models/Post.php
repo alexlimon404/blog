@@ -54,8 +54,8 @@ class Post extends Model
 
     const STATUS_CREATED = 'created';
     const STATUS_COMPLETED = 'completed';
-    const STATUS_GENERATED = 'generated';
-    const STATUS_REGENERATED = 'regenerated';
+    const STATUS_GENERATE = 'generate';
+    const STATUS_REGENERATE = 'regenerate';
     const STATUS_ERROR = 'error';
 
     protected static function boot(): void
@@ -81,8 +81,8 @@ class Post extends Model
         return new Collection([
             ['id' => static::STATUS_COMPLETED, 'name' => __('Завершено'), 'color' => 'success'],
             ['id' => static::STATUS_CREATED, 'name' => __('Создано'), 'color' => 'grey'],
-            ['id' => static::STATUS_GENERATED, 'name' => __('Генерируется'), 'color' => 'warning'],
-            ['id' => static::STATUS_REGENERATED, 'name' => __('Регенерируется'), 'color' => 'grey'],
+            ['id' => static::STATUS_GENERATE, 'name' => __('Генерируется'), 'color' => 'warning'],
+            ['id' => static::STATUS_REGENERATE, 'name' => __('Регенерируется'), 'color' => 'grey'],
             ['id' => static::STATUS_ERROR, 'name' => __('Ошибка'), 'color' => 'danger'],
         ]);
     }

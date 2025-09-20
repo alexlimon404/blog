@@ -14,9 +14,11 @@ class RegenerateAction extends Action
 
     public function handle(): void
     {
-        AiGenerator::driver($this->post->driver)->regenerateText($this->post->uuid, [
+        $data = AiGenerator::driver($this->post->driver)->regenerateText($this->post->uuid, [
             'model_name' => $this->post->model,
             'text_request' => "{$this->post->basePrompt?->prompt} {$this->post->title}",
         ]);
+
+        $data['status'] === Post::STATUS_REGENERATE && $this->post->updateStatus($data['status']);
     }
 }

@@ -34,6 +34,7 @@ class PostsTable
                     ->sortable(),
 
                 TextColumn::make('uuid')
+                    ->searchable()
                     ->copyable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
