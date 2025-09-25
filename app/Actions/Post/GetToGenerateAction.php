@@ -20,8 +20,10 @@ class GetToGenerateAction extends Action
 
         if ($data['uuid'] === $this->post->uuid) {
             $this->post->update([
-                'content' => $data['text_response'],
+                'content' => $content = $data['text_response'],
             ]);
+
+            $content && $this->post->updateStatus(Post::STATUS_COMPLETED);
         }
     }
 }

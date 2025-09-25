@@ -43,6 +43,11 @@ class PostsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
+                TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('published_at')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->dateTime()
@@ -83,6 +88,7 @@ class PostsTable
                     ->formatStateUsing(fn (string $state): string => Post::getStatuses()->firstWhere('id', $state)['name'] ?? $state),
 
                 TextColumn::make('status_at')
+                    ->sortable()
                     ->dateTime()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('today_visits_count')

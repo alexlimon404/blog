@@ -41,6 +41,7 @@ class AdminPanelProvider extends PanelProvider
 
         BulkAction::configureUsing(static function (BulkAction $action): void {
             $action->badge();
+            $action->deselectRecordsAfterCompletion();
         });
 
         EditAction::configureUsing(static function (EditAction $action): void {

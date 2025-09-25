@@ -41,19 +41,15 @@ class VisitInfoList
                         TextEntry::make('referrer')
                             ->label('Источник (Referrer)')
                             ->placeholder('Прямой переход')
-                            ->copyable()
-                            ->columnSpanFull(),
+                            ->copyable(),
 
                         TextEntry::make('user_agent')
-                            ->label('User Agent')
-                            ->copyable()
-                            ->columnSpanFull(),
+                            ->label('User Agent'),
 
                         TextEntry::make('metadata')
                             ->label('Метаданные')
                             ->formatStateUsing(fn ($state) => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : $state)
-                            ->copyable()
-                            ->columnSpanFull(),
+                            ->copyable(),
                     ]),
             ]);
     }
