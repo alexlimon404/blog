@@ -24,12 +24,11 @@ class VisitsTable
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('url')
-                    ->searchable(isIndividual:true)
-                    ->limit(30),
+                    ->formatStateUsing(fn (string $state): string => parse_url($state, PHP_URL_PATH) ?: $state)
+                    ->searchable(isIndividual:true),
 
                 TextColumn::make('post.title')
                     ->toggleable(isToggledHiddenByDefault: false)
-                    ->limit(30)
                     ->color('warning'),
 
                 TextColumn::make('page_title')
@@ -51,7 +50,7 @@ class VisitsTable
                 TextColumn::make('user_agent')
                     ->limit(60)
                     ->searchable(isIndividual: true)
-                    ->toggleable(isToggledHiddenByDefault: false),
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Filter::make('created_at')
