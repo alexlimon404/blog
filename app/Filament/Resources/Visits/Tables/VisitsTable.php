@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Visits\Tables;
 
-use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
@@ -24,7 +24,7 @@ class VisitsTable
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('url')
-                    ->searchable()
+                    ->searchable(isIndividual:true)
                     ->limit(30),
 
                 TextColumn::make('post.title')
@@ -75,11 +75,10 @@ class VisitsTable
             ])
             ->recordActions([
                 ViewAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                DeleteBulkAction::make(),
             ]);
     }
 }

@@ -12,7 +12,7 @@ class Test implements Driver
     {
         return [
             'uuid' => $params['uuid'],
-            'content' => 'asdasd',
+            'text_response' => 'asdasd',
         ];
     }
 

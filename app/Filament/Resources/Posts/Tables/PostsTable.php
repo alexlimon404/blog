@@ -174,7 +174,7 @@ class PostsTable
                             ]);
                         }
                     }),
-                DeleteBulkAction::make()->label(''),
+                DeleteBulkAction::make(),
             ]);
     }
 }

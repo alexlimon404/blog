@@ -20,11 +20,32 @@ class TrackVisits
         $response = $next($request);
 
         // Записываем только GET запросы и только если это не AJAX
-        if ($request->isMethod('GET') && ! $request->ajax() && $response->getStatusCode() === 200) {
+        if ($request->isMethod('GET')
+            && ! $request->ajax()
+            && $response->getStatusCode() === 200
+            && ! $this->shouldExclude($request)) {
             $this->recordVisit($request);
         }
 
         return $response;
+    }
+
+    private function shouldExclude(Request $request): bool
+    {
+        $excludedPaths = [
+            'telescope',
+            'admin',
+        ];
+
+        $path = $request->path();
+
+        foreach ($excludedPaths as $excluded) {
+            if (str_starts_with($path, $excluded)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function recordVisit(Request $request): void

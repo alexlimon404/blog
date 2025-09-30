@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Http\Middleware\Authenticate;
@@ -52,6 +53,9 @@ class AdminPanelProvider extends PanelProvider
         });
         DeleteAction::configureUsing(static function (DeleteAction $action): void {
             $action->label('D');
+        });
+        DeleteBulkAction::configureUsing(static function (DeleteBulkAction $action): void {
+            $action->label('');
         });
         Action::configureUsing(static function (Action $action): void {
             $livewire = app('livewire')->current();
