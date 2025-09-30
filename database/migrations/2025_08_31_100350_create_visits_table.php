@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->ipAddress();
             $table->string('session_id', 100)->nullable();
             $table->json('metadata')->nullable();
+            $table->string('bot_name')->nullable();
         });
     }
 

@@ -14,6 +14,7 @@ class Visit extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'created_at',
         'url',
         'page_title',
         'referrer',
@@ -22,12 +23,21 @@ class Visit extends Model
         'session_id',
         'post_id',
         'metadata',
+        'bot_name',
     ];
 
     protected $casts = [
         'metadata' => 'array',
         'created_at' => 'datetime',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Visit $visit) {
+            $botInfo = static::detectBot($visit->user_agent ?? '');
+            $visit->bot_name = $botInfo['bot_name'];
+        });
+    }
 
     public static function getTotalVisits(): int
     {
@@ -88,5 +98,77 @@ class Visit extends Model
     public function post(): BelongsTo
     {
         return $this->belongsTo(Post::class);
+    }
+
+    public static function botNames(): array
+    {
+        return [
+            'Googlebot' => 'Google',
+            'Google-InspectionTool' => 'Google',
+            'Googlebot-Image' => 'Google Images',
+            'Googlebot-News' => 'Google News',
+            'Googlebot-Video' => 'Google Video',
+            'AdsBot-Google' => 'Google Ads',
+            'Mediapartners-Google' => 'Google AdSense',
+            'APIs-Google' => 'Google APIs',
+            'bingbot' => 'Bing',
+            'BingPreview' => 'Bing Preview',
+            'msnbot' => 'MSN',
+            'Slurp' => 'Yahoo',
+            'DuckDuckBot' => 'DuckDuckGo',
+            'Baiduspider' => 'Baidu',
+            'YandexBot' => 'Yandex',
+            'YandexImages' => 'Yandex Images',
+            'facebot' => 'Facebook',
+            'facebookexternalhit' => 'Facebook',
+            'Twitterbot' => 'Twitter',
+            'LinkedInBot' => 'LinkedIn',
+            'Slackbot' => 'Slack',
+            'Discordbot' => 'Discord',
+            'TelegramBot' => 'Telegram',
+            'WhatsApp' => 'WhatsApp',
+            'ia_archiver' => 'Alexa',
+            'archive.org_bot' => 'Archive.org',
+            'SemrushBot' => 'Semrush',
+            'AhrefsBot' => 'Ahrefs',
+            'MJ12bot' => 'Majestic',
+            'DotBot' => 'Moz',
+            'PetalBot' => 'Huawei',
+            'curl' => 'cURL',
+            'wget' => 'Wget',
+            'python-requests' => 'Python Requests',
+            'axios' => 'Axios',
+            'node-fetch' => 'Node Fetch',
+            'okhttp' => 'OkHttp',
+            'Postman' => 'Postman',
+        ];
+    }
+
+    public static function detectBot(string $userAgent): array
+    {
+        $bots = static::botNames();
+
+        $userAgentLower = strtolower($userAgent);
+
+        foreach ($bots as $pattern => $name) {
+            if (str_contains($userAgentLower, strtolower($pattern))) {
+                return [
+                    'bot_name' => $name,
+                ];
+            }
+        }
+
+        $generalPatterns = ['bot', 'crawl', 'spider', 'scraper', 'http'];
+        foreach ($generalPatterns as $pattern) {
+            if (str_contains($userAgentLower, $pattern)) {
+                return [
+                    'bot_name' => 'Unknown Bot',
+                ];
+            }
+        }
+
+        return [
+            'bot_name' => null,
+        ];
     }
 }

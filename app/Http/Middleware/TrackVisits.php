@@ -35,6 +35,7 @@ class TrackVisits
         $excludedPaths = [
             'telescope',
             'admin',
+            'log-viewer',
         ];
 
         $path = $request->path();
@@ -54,12 +55,12 @@ class TrackVisits
         $slug && $post = Post::where('slug', $slug)->first();
 
         try {
-            DB::table('visits')->insert([
+            \App\Models\Visit::create([
                 'created_at' => now(),
                 'url' => $request->fullUrl(),
                 'page_title' => $this->extractPageTitle($request),
                 'referrer' => $request->header('Referer'),
-                'user_agent' => $request->header('User-Agent'),
+                'user_agent' => $request->header('User-Agent', ''),
                 'ip_address' => $request->ip(),
                 'session_id' => $request->session()->getId(),
                 'post_id' => $post->id ?? null,

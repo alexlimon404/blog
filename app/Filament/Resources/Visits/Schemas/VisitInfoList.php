@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Visits\Schemas;
 
+use App\Filament\Resources\Posts\PostResource;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -27,6 +28,12 @@ class VisitInfoList
                             ->label('Заголовок страницы')
                             ->placeholder('Не указан'),
 
+                        TextEntry::make('post.title')
+                            ->color('primary')
+                            ->label('Пост')
+                            ->placeholder('Не привязан')
+                            ->url(fn ($record) => $record->post ? PostResource::getUrl('view', ['record' => $record->post]) : null),
+
                         TextEntry::make('ip_address')
                             ->label('IP адрес'),
 
@@ -50,6 +57,10 @@ class VisitInfoList
                             ->label('Метаданные')
                             ->formatStateUsing(fn ($state) => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : $state)
                             ->copyable(),
+
+                        TextEntry::make('bot_name')
+                            ->badge()
+                            ->inlineLabel(),
                     ]),
             ]);
     }
