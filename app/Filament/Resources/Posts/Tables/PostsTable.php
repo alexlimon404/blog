@@ -146,7 +146,7 @@ class PostsTable
                         }
                     }),
                 BulkAction::make('regenerate')
-                    ->color('warning')
+                    ->color('danger')
                     ->action(function (array $data, $records) {
                         foreach ($records as $record) {
                             RegenerateAction::run($record, $data);
