@@ -16,7 +16,7 @@ class TextGeneratorAi implements Driver
 
     public function getText(array $params): array
     {
-        $response = $this->client()->get("prompt-requests/{$params['uuid']}");
+        $response = $this->client()->get("api/prompt-requests/{$params['uuid']}");
 
         if ($response->status() === 200) {
             return $response->json()['data'];
@@ -27,7 +27,7 @@ class TextGeneratorAi implements Driver
 
     public function createText(array $params): array
     {
-        $response = $this->client()->post("prompt-requests", $params);
+        $response = $this->client()->post("api/prompt-requests", $params);
 
         if ($response->status() === 201) {
             return $response->json()['data'];
@@ -38,7 +38,7 @@ class TextGeneratorAi implements Driver
 
     public function regenerateText(string $uuid, array $params): array
     {
-        $response = $this->client()->put("prompt-requests/$uuid/regenerate", $params);
+        $response = $this->client()->put("api/prompt-requests/$uuid/regenerate", $params);
 
         if ($response->status() === 200) {
             return $response->json()['data'];
@@ -50,7 +50,7 @@ class TextGeneratorAi implements Driver
     public function getModels(array $params = []): array
     {
         try {
-            $response = $this->client()->get('models', $params);
+            $response = $this->client()->get('api/models', $params);
 
             if ($response->status() === 200) {
 
@@ -70,6 +70,6 @@ class TextGeneratorAi implements Driver
             ])
             ->withoutVerifying()
             ->timeout(3)
-            ->baseUrl("{$this->service['url']}/api");
+            ->baseUrl("{$this->service['url']}");
     }
 }

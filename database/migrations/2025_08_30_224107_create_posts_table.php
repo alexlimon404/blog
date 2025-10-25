@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('slug')->unique();
             $table->text('content')->nullable();
             $table->text('excerpt')->nullable();
+            $table->text('description')->nullable();
             $table->foreignId('base_prompt_id')->nullable()->constrained()->onDelete('set null');
             $table->foreignId('category_id')->index()->nullable()->constrained()->onDelete('set null');
             $table->foreignId('author_id')->index()->nullable()->constrained()->onDelete('set null');

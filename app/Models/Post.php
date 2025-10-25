@@ -21,6 +21,7 @@ use Illuminate\Support\Str;
  * @property string $slug
  * @property string|null $content
  * @property string|null $excerpt
+ * @property string|null $description
  * @property int $base_prompt_id
  * @property int|null $category_id
  * @property int|null $author_id
@@ -41,6 +42,7 @@ class Post extends Model
         'uuid',
         'title', 'slug',
         'content', 'excerpt',
+        'description',
         'base_prompt_id', 'category_id', 'author_id',
         'published_at',
         'driver', 'model',

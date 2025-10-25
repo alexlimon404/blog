@@ -39,6 +39,8 @@ class ListPosts extends ListRecords
                         ->searchable(),
                     Textarea::make('title_list')
                         ->required(),
+                    Textarea::make('description')
+                        ->required(),
                 ])
                 ->action(function (array $data) {
                     $title_list = explode(PHP_EOL, trim($data['title_list']));
@@ -51,6 +53,7 @@ class ListPosts extends ListRecords
                                 'model' => $data['model'],
                                 'title' => $title,
                                 'base_prompt_id' => $data['base_prompt'],
+                                'description' => $data['description'],
                             ]);
                         } catch (\Exception $e) {
                             info($e->getMessage());

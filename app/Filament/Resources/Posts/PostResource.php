@@ -76,6 +76,7 @@ class PostResource extends Resource
                         ->openUrlInNewTab(),
 
                     TextEntry::make('excerpt'),
+                    TextEntry::make('description'),
 
                     TextEntry::make('tags.name')
                         ->label('Tags')

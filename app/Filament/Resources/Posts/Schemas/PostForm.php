@@ -39,6 +39,10 @@ class PostForm
                         Textarea::make('excerpt')
                             ->autosize()
                             ->maxLength(500),
+
+                        Textarea::make('description')
+                            ->autosize()
+                            ->maxLength(500),
                     ])->columns(1),
 
                 Section::make('Relationships & Settings')

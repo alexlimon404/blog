@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $posts = Post::published()
             ->with(['author', 'category', 'tags'])
