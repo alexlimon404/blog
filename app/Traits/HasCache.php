@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Cache\TaggedCache;
+use Illuminate\Support\Facades\Cache;
 
 trait HasCache
 {
@@ -36,7 +37,7 @@ trait HasCache
 
     public static function cache(): TaggedCache
     {
-        return app('cache')->tags(static::getCacheTags());
+        return Cache::tags(static::getCacheTags());
     }
 
     public static function getCacheTags(): array

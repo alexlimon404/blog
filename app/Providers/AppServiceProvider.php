@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use App\View\Composers\SettingsComposer;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 use Opcodes\LogViewer\Facades\LogViewer;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
         LogViewer::auth(static function ($request) {
             return $request->user()->admin;
         });
+
+        View::composer('layouts.app', SettingsComposer::class);
 
         // if (app()->isProduction()) {
         // \Illuminate\Support\Facades\URL::forceScheme('https');

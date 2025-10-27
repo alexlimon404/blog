@@ -16,4 +16,6 @@ php artisan view:clear
 
 php artisan filament:optimize
 
+php artisan app:install
+
 #php artisan horizon:terminate

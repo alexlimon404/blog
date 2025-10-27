@@ -28,7 +28,7 @@ class SettingForm
                             ->options(
                                 Setting::getFields()->pluck('name', 'id')->toArray()
                             )
-                            ->default(Setting::FIELD_TEXT)
+                            ->default(Setting::FIELD_STRING)
                             ->required(),
 
                         Textarea::make('value')
