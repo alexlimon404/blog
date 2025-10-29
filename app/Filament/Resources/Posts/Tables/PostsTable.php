@@ -112,9 +112,19 @@ class PostsTable
                     ->label('Author')
                     ->options(Author::pluck('name', 'id')),
 
-                Filter::make('published')
-                    ->query(fn (Builder $query): Builder => $query->whereNotNull('published_at')->where('published_at', '<=', now()))
-                    ->label('Published Only'),
+                SelectFilter::make('published')
+                    ->label('Публикация')
+                    ->options([
+                        'published' => 'Опубликовано',
+                        'not_published' => 'Не опубликовано',
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return match ($data['value'] ?? null) {
+                            'published' => $query->whereNotNull('published_at')->where('published_at', '<=', now()),
+                            'not_published' => $query->where(fn ($q) => $q->whereNull('published_at')->orWhere('published_at', '>', now())),
+                            default => $query,
+                        };
+                    }),
             ])
             ->recordActions([
                 ViewAction::make(),
