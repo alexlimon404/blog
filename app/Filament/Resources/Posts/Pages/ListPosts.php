@@ -13,6 +13,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Tabs\Tab;
+use Illuminate\Support\Facades\Cache;
 
 class ListPosts extends ListRecords
 {
@@ -71,5 +73,30 @@ class ListPosts extends ListRecords
                 ->modalSubmitActionLabel('Load'),
             CreateAction::make(),
         ];
+    }
+
+    public function getTabs(): array
+    {
+        $statusCounts = Cache::remember('posts.status_counts', 180, function () {
+            return Post::query()
+                ->selectRaw('status, COUNT(*) as count')
+                ->groupBy('status')
+                ->pluck('count', 'status');
+        });
+
+        $totalCount = $statusCounts->sum();
+
+        $tabs = [
+            'all' => Tab::make('Все')
+                ->badge($totalCount),
+        ];
+
+        foreach (Post::getStatuses() as $status) {
+            $tabs[$status['id']] = Tab::make($status['name'])
+                ->query(fn ($query) => $query->where('status', $status['id']))
+                ->badge($statusCounts->get($status['id'], 0));
+        }
+
+        return $tabs;
     }
 }
