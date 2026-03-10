@@ -4,7 +4,7 @@
     </div>
     <div class="card-body">
         @php
-            $categories = \App\Models\Category::withCount('posts')->get();
+            $categories = cache()->remember('sidebar_categories', 3600, fn() => \App\Models\Category::withCount('posts')->get());
         @endphp
 
         @foreach($categories as $category)
@@ -22,7 +22,7 @@
     </div>
     <div class="card-body">
         @php
-            $tags = \App\Models\Tag::withCount('posts')->orderBy('posts_count', 'desc')->take(10)->get();
+            $tags = cache()->remember('sidebar_tags', 3600, fn() => \App\Models\Tag::withCount('posts')->orderBy('posts_count', 'desc')->take(10)->get());
         @endphp
 
         @foreach($tags as $tag)
@@ -41,7 +41,7 @@
     </div>
     <div class="card-body">
         @php
-            $recentPosts = \App\Models\Post::published()->latest('published_at')->take(5)->get();
+            $recentPosts = cache()->remember('sidebar_recent_posts', 3600, fn() => \App\Models\Post::published()->latest('published_at')->take(5)->get());
         @endphp
 
         @foreach($recentPosts as $recentPost)
