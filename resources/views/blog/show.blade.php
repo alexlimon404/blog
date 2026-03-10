@@ -1,8 +1,39 @@
 @extends('layouts.app')
 
-@section('title', $post->title)
+@section('title', $post->title . ' | ' . setting('default_title', 'Blog'))
+@section('description', $post->description ?: $post->excerpt ?: Str::limit(strip_tags($post->content), 160))
+@section('og_type', 'article')
+@section('canonical', route('blog.post', $post->slug))
+@section('published_at', $post->published_at?->toIso8601String() ?? '')
+@section('updated_at', $post->updated_at?->toIso8601String() ?? '')
 
 @section('content')
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "BlogPosting",
+        "headline": @json($post->title),
+        "description": @json($post->description ?: $post->excerpt ?: Str::limit(strip_tags($post->content), 160)),
+        "url": "{{ route('blog.post', $post->slug) }}",
+        "datePublished": "{{ $post->published_at?->toIso8601String() }}",
+        "dateModified": "{{ $post->updated_at->toIso8601String() }}",
+        @if($post->author)
+        "author": {
+            "@@type": "Person",
+            "name": @json($post->author->name)
+        },
+        @endif
+        @if($post->category)
+        "articleSection": @json($post->category->name),
+        @endif
+        "keywords": @json($post->tags->pluck('name')->implode(', ')),
+        "publisher": {
+            "@@type": "Organization",
+            "name": @json(setting('default_title', 'Blog'))
+        }
+    }
+    </script>
+
     <div class="row">
         <div class="col-md-8">
             <article>

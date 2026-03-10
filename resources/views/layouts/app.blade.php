@@ -7,9 +7,31 @@
     <meta name="keywords" content="@yield('keywords', $settings->get('default_keywords'))">
     <meta name="author" content="@yield('author', $settings->get('default_author'))">
 
-    <link rel="canonical" href="{{ url()->current() }}">
+    <link rel="canonical" href="@yield('canonical', url()->current())">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', $settings->get('default_title', ''))</title>
+
+    {{-- Open Graph --}}
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:title" content="@yield('title', $settings->get('default_title', ''))">
+    <meta property="og:description" content="@yield('description', $settings->get('default_description'))">
+    <meta property="og:url" content="@yield('canonical', url()->current())">
+    <meta property="og:site_name" content="{{ $settings->get('default_title', 'Blog') }}">
+    <meta property="og:locale" content="{{ str_replace('_', '-', app()->getLocale()) }}">
+    @hasSection('og_image')
+        <meta property="og:image" content="@yield('og_image')">
+    @endif
+    @hasSection('published_at')
+        <meta property="article:published_time" content="@yield('published_at')">
+    @endif
+    @hasSection('updated_at')
+        <meta property="article:modified_time" content="@yield('updated_at')">
+    @endif
+
+    {{-- Twitter Card --}}
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="@yield('title', $settings->get('default_title', ''))">
+    <meta name="twitter:description" content="@yield('description', $settings->get('default_description'))">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .theme-toggle {

@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Tag: ' . $tag->name)
+@section('title', $tag->name . ' | ' . setting('default_title', 'Blog'))
+@section('description', 'Posts tagged with ' . $tag->name)
+@section('canonical', route('blog.tag', $tag->slug))
 
 @section('content')
     <div class="row">

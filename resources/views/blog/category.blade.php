@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Category: ' . $category->name)
+@section('title', $category->name . ' | ' . setting('default_title', 'Blog'))
+@section('description', $category->description ?: 'Posts in category ' . $category->name)
+@section('canonical', route('blog.category', $category->slug))
 
 @section('content')
     <div class="row">

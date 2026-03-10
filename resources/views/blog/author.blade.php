@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Author: ' . $author->name)
+@section('title', $author->name . ' | ' . setting('default_title', 'Blog'))
+@section('description', $author->bio ?: 'Posts by ' . $author->name)
+@section('canonical', route('blog.author', $author->id))
 
 @section('content')
     <div class="row">

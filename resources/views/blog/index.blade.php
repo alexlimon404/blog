@@ -1,8 +1,19 @@
 @extends('layouts.app')
 
-@section('title', 'Blog Posts')
+@section('title', setting('default_title', 'Blog'))
+@section('canonical', url('/'))
 
 @section('content')
+    <script type="application/ld+json">
+        {
+            "@@context": "https://schema.org",
+            "@@type": "Blog",
+            "name": @json(setting('default_title', 'Blog')),
+        "description": @json(setting('default_description', '')),
+        "url": "{{ url('/') }}"
+    }
+    </script>
+
     <div class="row">
         <div class="col-md-8">
             <h1>Latest Posts</h1>
@@ -51,6 +62,6 @@
 
         <div class="col-md-4">
             @include('blog.sidebar')
+        </div>
     </div>
-</div>
 @endsection
