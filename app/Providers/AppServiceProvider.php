@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Post;
+use App\Observers\PostObserver;
 use App\View\Composers\SettingsComposer;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
@@ -24,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         View::composer('layouts.app', SettingsComposer::class);
+
+        Post::observe(PostObserver::class);
 
         // if (app()->isProduction()) {
         // \Illuminate\Support\Facades\URL::forceScheme('https');

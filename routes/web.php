@@ -12,6 +12,15 @@ Route::get('/tag/{slug}', [BlogController::class, 'tag'])->name('blog.tag');
 Route::get('/author/{id}', [BlogController::class, 'author'])->name('blog.author');
 Route::get('/feed', [BlogController::class, 'feed'])->name('blog.feed');
 
+// IndexNow key verification
+Route::get('/{key}.txt', function (string $key) {
+    $indexNowKey = config('services.indexnow.key');
+    if ($indexNowKey && $key === $indexNowKey) {
+        return response($indexNowKey)->header('Content-Type', 'text/plain');
+    }
+    abort(404);
+})->where('key', '[a-zA-Z0-9]{8,128}');
+
 Route::get('/robots.txt', function () {
     $content = "User-agent: *\n";
     $content .= "Disallow: /admin/\n";

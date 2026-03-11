@@ -42,6 +42,10 @@ return [
         'auth_key' => env('AI_CHAT_AUTH'),
     ],
 
+    'indexnow' => [
+        'key' => env('INDEXNOW_KEY'),
+    ],
+
     'firebase' => [
         'api_key' => env('FIREBASE_API_KEY'),
         'auth_domain' => env('FIREBASE_AUTH_DOMAIN'),
