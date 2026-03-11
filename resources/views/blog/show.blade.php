@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', $post->title . ' | ' . setting('default_title', 'Blog'))
-@section('description', $post->description ?: $post->excerpt ?: Str::limit(strip_tags($post->content), 160))
+@section('description', $post->description ?: $post->excerpt ?: Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags($post->content))), 160))
 @section('og_type', 'article')
 @section('canonical', route('blog.post', $post->slug))
 @section('published_at', $post->published_at?->toIso8601String() ?? '')
@@ -13,7 +13,7 @@
         "@@context": "https://schema.org",
         "@@type": "BlogPosting",
         "headline": @json($post->title),
-        "description": @json($post->description ?: $post->excerpt ?: Str::limit(strip_tags($post->content), 160)),
+        "description": @json($post->description ?: $post->excerpt ?: Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags($post->content))), 160)),
         "url": "{{ route('blog.post', $post->slug) }}",
         "datePublished": "{{ $post->published_at?->toIso8601String() }}",
         "dateModified": "{{ $post->updated_at->toIso8601String() }}",

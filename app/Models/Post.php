@@ -79,11 +79,12 @@ class Post extends Model
 
         static::saving(function ($post) {
             if ($post->content) {
+                $cleanText = trim(preg_replace('/\s+/', ' ', strip_tags($post->content)));
                 if (empty($post->excerpt)) {
-                    $post->excerpt = Str::limit(strip_tags($post->content), 160);
+                    $post->excerpt = Str::limit($cleanText, 160);
                 }
                 if (empty($post->description)) {
-                    $post->description = Str::limit(strip_tags($post->content), 160);
+                    $post->description = Str::limit($cleanText, 160);
                 }
             }
         });
