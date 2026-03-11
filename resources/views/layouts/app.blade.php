@@ -36,7 +36,8 @@
     <meta name="twitter:title" content="@yield('title', $settings->get('default_title', ''))">
     <meta name="twitter:description" content="@yield('description', $settings->get('default_description'))">
 
-    <link rel="alternate" type="application/rss+xml" title="{{ $settings->get('default_title', 'Blog') }} RSS Feed" href="{{ route('blog.feed') }}">
+    <link rel="alternate" type="application/rss+xml" title="{{ $settings->get('default_title', 'Blog') }} RSS Feed"
+          href="{{ route('blog.feed') }}">
     @yield('pagination_links')
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
@@ -180,12 +181,10 @@
             }
 
             try {
-                await navigator.serviceWorker.ready;
-
                 const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
                 console.log('Service Worker registered:', registration);
 
-                await new Promise(resolve => setTimeout(resolve, 500));
+                await navigator.serviceWorker.ready;
 
                 this.requestPermission();
             } catch (error) {

@@ -9,12 +9,12 @@ class FirebaseConfigController extends Controller
     public function config(): JsonResponse
     {
         return response()->json([
-            'apiKey' => env('FIREBASE_API_KEY'),
-            'authDomain' => env('FIREBASE_AUTH_DOMAIN'),
-            'projectId' => env('FIREBASE_PROJECT_ID'),
-            'storageBucket' => env('FIREBASE_STORAGE_BUCKET'),
-            'messagingSenderId' => env('FIREBASE_MESSAGING_SENDER_ID'),
-            'appId' => env('FIREBASE_APP_ID')
+            'apiKey' => config('services.firebase.api_key'),
+            'authDomain' => config('services.firebase.auth_domain'),
+            'projectId' => config('services.firebase.project_id'),
+            'storageBucket' => config('services.firebase.storage_bucket'),
+            'messagingSenderId' => config('services.firebase.messaging_sender_id'),
+            'appId' => config('services.firebase.app_id'),
         ]);
     }
 }
