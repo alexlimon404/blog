@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
+@php
+    $metaDescription = $post->description ?: $post->excerpt ?: Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags($post->content))), 160);
+@endphp
+
 @section('title', $post->title . ' | ' . setting('default_title', 'Blog'))
-@section('description', $post->description ?: $post->excerpt ?: Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags($post->content))), 160))
+@section('description', $metaDescription)
 @section('og_type', 'article')
 @section('canonical', route('blog.post', $post->slug))
 @section('published_at', $post->published_at?->toIso8601String() ?? '')
@@ -9,22 +13,22 @@
 
 @section('content')
     <script type="application/ld+json">
-    {
-        "@@context": "https://schema.org",
-        "@@type": "BlogPosting",
-        "headline": @json($post->title),
-        "description": @json($post->description ?: $post->excerpt ?: Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags($post->content))), 160)),
+        {
+            "@@context": "https://schema.org",
+            "@@type": "BlogPosting",
+            "headline": @json($post->title),
+        "description": @json($metaDescription),
         "url": "{{ route('blog.post', $post->slug) }}",
         "datePublished": "{{ $post->published_at?->toIso8601String() }}",
         "dateModified": "{{ $post->updated_at->toIso8601String() }}",
         @if($post->author)
-        "author": {
-            "@@type": "Person",
-            "name": @json($post->author->name)
-        },
+            "author": {
+                "@@type": "Person",
+                "name": @json($post->author->name)
+            },
         @endif
         @if($post->category)
-        "articleSection": @json($post->category->name),
+            "articleSection": @json($post->category->name),
         @endif
         "keywords": @json($post->tags->pluck('name')->implode(', ')),
         "publisher": {
@@ -119,7 +123,8 @@
                             <ul class="list-unstyled mb-0">
                                 @foreach($tocItems as $item)
                                     <li class="{{ $item['tag'] === 'h3' ? 'ms-3' : '' }}">
-                                        <a href="#{{ $item['id'] }}" class="text-decoration-none">{{ $item['text'] }}</a>
+                                        <a href="#{{ $item['id'] }}"
+                                           class="text-decoration-none">{{ $item['text'] }}</a>
                                     </li>
                                 @endforeach
                             </ul>
@@ -141,7 +146,8 @@
                                 <div class="card h-100">
                                     <div class="card-body">
                                         <h5 class="card-title">
-                                            <a href="{{ route('blog.post', $related->slug) }}" class="text-decoration-none">
+                                            <a href="{{ route('blog.post', $related->slug) }}"
+                                               class="text-decoration-none">
                                                 {{ $related->title }}
                                             </a>
                                         </h5>
