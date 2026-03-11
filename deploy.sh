@@ -18,6 +18,6 @@ php artisan view:clear
 
 php artisan filament:optimize
 
-php artisan generate:sitemap
+php artisan sitemap:generate
 
 #php artisan horizon:terminate
