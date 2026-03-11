@@ -76,6 +76,17 @@ class Post extends Model
                 $post->slug = Str::slug($post->title);
             }
         });
+
+        static::saving(function ($post) {
+            if ($post->content) {
+                if (empty($post->excerpt)) {
+                    $post->excerpt = Str::limit(strip_tags($post->content), 160);
+                }
+                if (empty($post->description)) {
+                    $post->description = Str::limit(strip_tags($post->content), 160);
+                }
+            }
+        });
     }
 
     public static function getStatuses(): Collection

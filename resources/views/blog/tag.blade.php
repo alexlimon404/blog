@@ -3,8 +3,20 @@
 @section('title', $tag->name . ' | ' . setting('default_title', 'Blog'))
 @section('description', 'Posts tagged with ' . $tag->name)
 @section('canonical', route('blog.tag', $tag->slug))
+@section('pagination_links')
+    @if($posts->previousPageUrl())
+        <link rel="prev" href="{{ $posts->previousPageUrl() }}">
+    @endif
+    @if($posts->nextPageUrl())
+        <link rel="next" href="{{ $posts->nextPageUrl() }}">
+    @endif
+@endsection
 
 @section('content')
+    @include('blog.breadcrumbs', ['breadcrumbs' => [
+        ['title' => $tag->name],
+    ]])
+
     <div class="row">
         <div class="col-md-8">
             <h1>

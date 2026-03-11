@@ -10,6 +10,7 @@ Route::get('/post/{slug}', [BlogController::class, 'show'])->name('blog.post');
 Route::get('/category/{slug}', [BlogController::class, 'category'])->name('blog.category');
 Route::get('/tag/{slug}', [BlogController::class, 'tag'])->name('blog.tag');
 Route::get('/author/{id}', [BlogController::class, 'author'])->name('blog.author');
+Route::get('/feed', [BlogController::class, 'feed'])->name('blog.feed');
 
 // Firebase config endpoint
 Route::get('/firebase-config', [FirebaseConfigController::class, 'config']);

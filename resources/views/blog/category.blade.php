@@ -3,8 +3,20 @@
 @section('title', $category->name . ' | ' . setting('default_title', 'Blog'))
 @section('description', $category->description ?: 'Posts in category ' . $category->name)
 @section('canonical', route('blog.category', $category->slug))
+@section('pagination_links')
+    @if($posts->previousPageUrl())
+        <link rel="prev" href="{{ $posts->previousPageUrl() }}">
+    @endif
+    @if($posts->nextPageUrl())
+        <link rel="next" href="{{ $posts->nextPageUrl() }}">
+    @endif
+@endsection
 
 @section('content')
+    @include('blog.breadcrumbs', ['breadcrumbs' => [
+        ['title' => $category->name],
+    ]])
+
     <div class="row">
         <div class="col-md-8">
             <h1>Category: {{ $category->name }}</h1>

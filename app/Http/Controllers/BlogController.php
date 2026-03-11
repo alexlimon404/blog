@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Tag;
 use App\Models\Author;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class BlogController extends Controller
 {
@@ -33,7 +34,19 @@ class BlogController extends Controller
 
         $post = $query->firstOrFail();
 
-        return view('blog.show', compact('post'));
+        $relatedPosts = Post::published()
+            ->where('id', '!=', $post->id)
+            ->where(function ($q) use ($post) {
+                $q->where('category_id', $post->category_id)
+                    ->orWhereHas('tags', function ($q) use ($post) {
+                        $q->whereIn('tags.id', $post->tags->pluck('id'));
+                    });
+            })
+            ->latest('published_at')
+            ->take(3)
+            ->get();
+
+        return view('blog.show', compact('post', 'relatedPosts'));
     }
 
     public function category(string $slug)
@@ -70,5 +83,19 @@ class BlogController extends Controller
             ->paginate(10);
 
         return view('blog.author', compact('author', 'posts'));
+    }
+
+    public function feed()
+    {
+        $posts = Post::published()
+            ->with(['author', 'category'])
+            ->latest('published_at')
+            ->take(20)
+            ->get();
+
+        $content = view('blog.feed', compact('posts'))->render();
+
+        return response($content)
+            ->header('Content-Type', 'application/rss+xml; charset=UTF-8');
     }
 }

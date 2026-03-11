@@ -3,14 +3,26 @@
 @section('title', $author->name . ' | ' . setting('default_title', 'Blog'))
 @section('description', $author->bio ?: 'Posts by ' . $author->name)
 @section('canonical', route('blog.author', $author->id))
+@section('pagination_links')
+    @if($posts->previousPageUrl())
+        <link rel="prev" href="{{ $posts->previousPageUrl() }}">
+    @endif
+    @if($posts->nextPageUrl())
+        <link rel="next" href="{{ $posts->nextPageUrl() }}">
+    @endif
+@endsection
 
 @section('content')
+    @include('blog.breadcrumbs', ['breadcrumbs' => [
+        ['title' => $author->name],
+    ]])
+
     <div class="row">
         <div class="col-md-8">
             <div class="d-flex align-items-center mb-4">
                 @if($author->avatar)
                     <img src="{{ $author->avatar }}" alt="{{ $author->name }}"
-                         class="rounded-circle me-3" width="80" height="80">
+                         class="rounded-circle me-3" width="80" height="80" loading="lazy">
                 @endif
                 <div>
                     <h1>{{ $author->name }}</h1>

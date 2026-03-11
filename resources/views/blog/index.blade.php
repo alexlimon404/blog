@@ -2,6 +2,14 @@
 
 @section('title', setting('default_title', 'Blog'))
 @section('canonical', url('/'))
+@section('pagination_links')
+    @if($posts->previousPageUrl())
+        <link rel="prev" href="{{ $posts->previousPageUrl() }}">
+    @endif
+    @if($posts->nextPageUrl())
+        <link rel="next" href="{{ $posts->nextPageUrl() }}">
+    @endif
+@endsection
 
 @section('content')
     <script type="application/ld+json">
@@ -36,6 +44,7 @@
                                 <a href="{{ route('blog.category', $post->category->slug) }}">{{ $post->category->name }}</a>
                             @endif
                             • {{ $post->published_at->format('M d, Y') }}
+                            • {{ ceil(str_word_count(strip_tags($post->content)) / 200) }} min read
                         </div>
 
                         <p class="card-text">{{ $post->excerpt }}</p>

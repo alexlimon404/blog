@@ -6,6 +6,9 @@
     <meta name="description" content="@yield('description', $settings->get('default_description'))">
     <meta name="keywords" content="@yield('keywords', $settings->get('default_keywords'))">
     <meta name="author" content="@yield('author', $settings->get('default_author'))">
+    @if(request()->has('page') && request()->input('page') > 1)
+        <meta name="robots" content="noindex, follow">
+    @endif
 
     <link rel="canonical" href="@yield('canonical', url()->current())">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -32,6 +35,12 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="@yield('title', $settings->get('default_title', ''))">
     <meta name="twitter:description" content="@yield('description', $settings->get('default_description'))">
+
+    <link rel="alternate" type="application/rss+xml" title="{{ $settings->get('default_title', 'Blog') }} RSS Feed" href="{{ route('blog.feed') }}">
+    @yield('pagination_links')
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://www.gstatic.com">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .theme-toggle {
