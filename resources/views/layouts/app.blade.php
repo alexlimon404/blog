@@ -129,7 +129,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" data-bs-theme="dark">
     <div class="container">
-        <a class="navbar-brand" href="{{ url('/') }}">Blog</a>
+        <a class="navbar-brand" href="{{ url('/') }}">{{ $settings->get('default_title', 'Blog') }}</a>
         <div class="navbar-nav ms-auto">
             <button class="theme-toggle" id="themeToggle" title="Toggle theme">
                 <span class="theme-icon">🌙</span>
@@ -144,7 +144,7 @@
 
 <footer class="bg-dark text-white text-center py-3 mt-5">
     <div class="container">
-        <p>&copy; {{ date('Y') }} Blog. All rights reserved.</p>
+        <p>&copy; {{ date('Y') }} {{ $settings->get('default_title', 'Blog') }}. All rights reserved.</p>
     </div>
 </footer>
 

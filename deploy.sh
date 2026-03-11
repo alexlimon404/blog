@@ -12,8 +12,12 @@ php artisan config:cache
 
 php artisan event:cache
 
+php artisan route:cache
+
 php artisan view:clear
 
 php artisan filament:optimize
+
+php artisan generate:sitemap
 
 #php artisan horizon:terminate

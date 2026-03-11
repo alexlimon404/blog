@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Models\Author;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
@@ -57,6 +58,16 @@ class GenerateSitemapAction extends Action
         foreach ($tags as $tag) {
             $url = route('blog.tag', $tag->slug);
             $xml .= $this->addUrl($url, $tag->updated_at, 'weekly', '0.5');
+        }
+
+        // Authors
+        $authors = Author::whereHas('posts', function ($query) {
+            $query->published();
+        })->get();
+
+        foreach ($authors as $author) {
+            $url = route('blog.author', $author->id);
+            $xml .= $this->addUrl($url, $author->updated_at, 'weekly', '0.5');
         }
 
         $xml .= '</urlset>';
