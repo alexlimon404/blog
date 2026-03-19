@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Page Not Found | ' . $settings->get('default_title', 'Blog'))
+@section('title', 'Page Not Found')
 @section('description', 'The page you are looking for could not be found.')
 
 @section('content')
